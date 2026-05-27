@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Markdown Review</title>
+    <script>
+      (() => {
+        const key = "markdown-review-layout-mode";
+        const mode = localStorage.getItem(key);
+        if (mode === "editor" || mode === "preview" || mode === "split") {
+          document.documentElement.setAttribute("data-layout-mode", mode);
+        }
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="./public/assets/favicon.svg" />
     <link rel="shortcut icon" href="./public/assets/favicon.svg" />
     <link rel="stylesheet" href="./style.css" />
@@ -23,12 +32,16 @@
     </header>
 
     <main class="layout">
-      <section class="panel">
+      <section class="panel" id="editorPanel">
         <div class="panel-title">编辑区</div>
         <textarea id="editor" spellcheck="false" aria-label="Markdown 输入"></textarea>
       </section>
 
-      <section class="panel">
+      <button class="splitter" id="splitterControls" type="button" aria-label="切换分栏模式" title="点击切换模式；拖拽可调整比例">
+        <span class="splitter-dot" aria-hidden="true"></span>
+      </button>
+
+      <section class="panel" id="previewPanel">
         <div class="panel-title">预览区（GFM）</div>
         <article id="preview" class="markdown-body"></article>
       </section>

@@ -1,14 +1,143 @@
 const STORAGE_KEY = "markdown-review-content";
 const THEME_KEY = "markdown-review-theme";
+const LAYOUT_MODE_KEY = "markdown-review-layout-mode";
+const SPLIT_RATIO_KEY = "markdown-review-split-ratio";
+const SPLIT_RATIO_MOBILE_KEY = "markdown-review-split-ratio-mobile";
 
 const SAMPLE = `# Markdown Review\n\n这是一个简洁的在线预览页面，支持 **GFM**。\n\n## 支持能力\n\n- 标题 / 引用 / 列表\n- 任务列表\n- 表格\n- 代码块高亮\n\n### 任务列表\n\n- [x] 页面初始化\n- [x] Markdown 渲染\n- [ ] 导出 HTML\n\n### 表格\n\n| Name | Type | Status |\n| --- | --- | --- |\n| marked | Parser | Ready |\n| DOMPurify | Security | Ready |\n\n### Code\n\n\`\`\`js\nfunction sum(a, b) {\n  return a + b;\n}\n\nconsole.log(sum(1, 2));\n\`\`\`\n`;
 
 const editor = document.getElementById("editor");
 const preview = document.getElementById("preview");
+const layout = document.querySelector(".layout");
+const splitterControls = document.getElementById("splitterControls");
 const themeBtn = document.getElementById("themeBtn");
 const sampleBtn = document.getElementById("sampleBtn");
 const copyBtn = document.getElementById("copyBtn");
 const clearBtn = document.getElementById("clearBtn");
+
+function applyLayoutMode(mode) {
+  const nextMode = ["editor", "split", "preview"].includes(mode) ? mode : "split";
+  document.documentElement.setAttribute("data-layout-mode", nextMode);
+  layout.setAttribute("data-layout-mode", nextMode);
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function isMobileViewport() {
+  return window.matchMedia("(max-width: 960px)").matches;
+}
+
+function applySplitRatio(ratio, isMobile) {
+  const nextRatio = clamp(ratio, 0.18, 0.82);
+  if (isMobile) {
+    layout.style.setProperty("--split-ratio-mobile", `${nextRatio * 100}%`);
+  } else {
+    layout.style.setProperty("--split-ratio", `${nextRatio * 100}%`);
+  }
+  return nextRatio;
+}
+
+const initialLayoutMode = localStorage.getItem(LAYOUT_MODE_KEY) || "split";
+applyLayoutMode(initialLayoutMode);
+
+const modeCycle = ["editor", "preview", "split"];
+
+const initialDesktopRatio = Number(localStorage.getItem(SPLIT_RATIO_KEY)) || 0.5;
+const initialMobileRatio = Number(localStorage.getItem(SPLIT_RATIO_MOBILE_KEY)) || 0.5;
+applySplitRatio(initialDesktopRatio, false);
+applySplitRatio(initialMobileRatio, true);
+
+let dragState = null;
+let ignoreClickAfterDrag = false;
+
+splitterControls.addEventListener("pointerdown", (event) => {
+  const mobile = isMobileViewport();
+  const size = mobile ? layout.clientHeight : layout.clientWidth;
+  if (!size) {
+    return;
+  }
+
+  const ratio = Number(
+    getComputedStyle(layout).getPropertyValue(mobile ? "--split-ratio-mobile" : "--split-ratio").replace("%", "")
+  );
+  const startRatio = Number.isFinite(ratio) ? ratio / 100 : 0.5;
+
+  dragState = {
+    mobile,
+    startPos: mobile ? event.clientY : event.clientX,
+    startRatio,
+    moved: false,
+  };
+
+  splitterControls.setPointerCapture(event.pointerId);
+});
+
+splitterControls.addEventListener("pointermove", (event) => {
+  if (!dragState) {
+    return;
+  }
+  const size = dragState.mobile ? layout.clientHeight : layout.clientWidth;
+  if (!size) {
+    return;
+  }
+
+  const currentPos = dragState.mobile ? event.clientY : event.clientX;
+  const deltaPx = currentPos - dragState.startPos;
+  const deltaRatio = (currentPos - dragState.startPos) / size;
+
+  if (Math.abs(deltaPx) > 4 && !dragState.moved) {
+    dragState.moved = true;
+  }
+
+  if (dragState.moved) {
+    const mode = layout.getAttribute("data-layout-mode");
+    if (mode !== "split") {
+      localStorage.setItem(LAYOUT_MODE_KEY, "split");
+      applyLayoutMode("split");
+    }
+  }
+
+  const nextRatio = applySplitRatio(dragState.startRatio + deltaRatio, dragState.mobile);
+
+  if (dragState.mobile) {
+    localStorage.setItem(SPLIT_RATIO_MOBILE_KEY, String(nextRatio));
+  } else {
+    localStorage.setItem(SPLIT_RATIO_KEY, String(nextRatio));
+  }
+});
+
+function stopDrag(pointerId) {
+  if (!dragState) {
+    return;
+  }
+  ignoreClickAfterDrag = dragState.moved;
+  dragState = null;
+  if (pointerId !== undefined) {
+    splitterControls.releasePointerCapture(pointerId);
+  }
+}
+
+splitterControls.addEventListener("pointerup", (event) => {
+  stopDrag(event.pointerId);
+});
+
+splitterControls.addEventListener("pointercancel", () => {
+  stopDrag();
+});
+
+splitterControls.addEventListener("click", () => {
+  if (ignoreClickAfterDrag) {
+    ignoreClickAfterDrag = false;
+    return;
+  }
+  const current = layout.getAttribute("data-layout-mode") || "split";
+  const currentIndex = modeCycle.indexOf(current);
+  const nextMode = modeCycle[(currentIndex + 1) % modeCycle.length];
+  localStorage.setItem(LAYOUT_MODE_KEY, nextMode);
+  applyLayoutMode(nextMode);
+});
 
 function applyTheme(theme) {
   document.body.setAttribute("data-theme", theme);
