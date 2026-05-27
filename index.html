@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Markdown Review</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <h1>Markdown Review</h1>
+        <p>GitHub 风格在线预览</p>
+      </div>
+      <div class="actions">
+        <button id="sampleBtn" type="button">示例</button>
+        <button id="copyBtn" type="button">复制 Markdown</button>
+        <button id="clearBtn" type="button">清空</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel">
+        <div class="panel-title">编辑区</div>
+        <textarea id="editor" spellcheck="false" aria-label="Markdown 输入"></textarea>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">预览区（GFM）</div>
+        <article id="preview" class="markdown-body"></article>
+      </section>
+    </main>
+
+    <script src="./bootstrap.js"></script>
+  </body>
+</html>
