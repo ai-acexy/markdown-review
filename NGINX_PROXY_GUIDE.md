@@ -2,6 +2,8 @@
 
 This guide shows how to configure Nginx as a reverse proxy for this project and similar web apps.
 
+Target production domain example: `md.acexy.cn`.
+
 ## 1. Common Reverse Proxy (HTTP)
 
 Use this when your app is running on `127.0.0.1:3000`.

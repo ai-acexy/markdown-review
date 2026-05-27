@@ -25,6 +25,11 @@ const ASSETS = {
       local: "./public/vendor/marked.min.js",
     },
     {
+      name: "marked-highlight",
+      cdn: "https://cdn.jsdelivr.net/npm/marked-highlight/lib/index.umd.js",
+      local: "./public/vendor/marked-highlight.umd.js",
+    },
+    {
       name: "highlight",
       cdn: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js",
       local: "./public/vendor/highlight.min.js",

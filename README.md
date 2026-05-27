@@ -10,17 +10,18 @@ I created this minimal markdown online preview project with GitHub-flavored rend
 
 ## Online
 
-- Live URL: [https://markdown.acexy.cn](https://markdown.acexy.cn)
+- Live URL: [https://md.acexy.cn](https://md.acexy.cn)
 
 ## Features
 
 - I implemented real-time preview while typing
 - I integrated GFM parsing (`marked`)
 - I added HTML sanitization (`DOMPurify`)
-- I enabled code syntax highlighting (`highlight.js`)
+- I enabled code syntax highlighting (`highlight.js` + `marked-highlight`)
 - I designed CDN-first loading with automatic local fallback
 - I added local storage persistence
 - I provided sample / clear / copy markdown actions
+- I added a light/dark theme toggle (default light)
 - I made the layout responsive for desktop and mobile
 
 ## Quick Start

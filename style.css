@@ -5,6 +5,21 @@
   --muted: #6b7280;
   --border: #dbe3ec;
   --accent: #2563eb;
+  --editor-bg: #ffffff;
+  --editor-text: #111827;
+  --topbar-bg: rgba(255, 255, 255, 0.92);
+}
+
+body[data-theme="dark"] {
+  --bg: #0b1220;
+  --surface: #111827;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --border: #243244;
+  --accent: #60a5fa;
+  --editor-bg: #0f172a;
+  --editor-text: #e5e7eb;
+  --topbar-bg: rgba(17, 24, 39, 0.9);
 }
 
 * {
@@ -19,6 +34,10 @@ body {
   font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
 }
 
+body[data-theme="dark"] {
+  background: linear-gradient(180deg, #0f172a 0%, var(--bg) 100%);
+}
+
 .topbar {
   position: sticky;
   top: 0;
@@ -26,7 +45,7 @@ body {
   height: 64px;
   padding: 0 16px;
   border-bottom: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--topbar-bg);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -99,8 +118,8 @@ button:hover {
   border: 0;
   resize: none;
   padding: 14px;
-  color: #111827;
-  background: #ffffff;
+  color: var(--editor-text);
+  background: var(--editor-bg);
   font-size: 14px;
   line-height: 1.65;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
@@ -118,6 +137,71 @@ button:hover {
 
 .markdown-body {
   background: transparent;
+}
+
+.markdown-body pre {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+body[data-theme="dark"] .markdown-body,
+body[data-theme="dark"] .markdown-body h1,
+body[data-theme="dark"] .markdown-body h2,
+body[data-theme="dark"] .markdown-body h3,
+body[data-theme="dark"] .markdown-body h4,
+body[data-theme="dark"] .markdown-body h5,
+body[data-theme="dark"] .markdown-body h6,
+body[data-theme="dark"] .markdown-body p,
+body[data-theme="dark"] .markdown-body li,
+body[data-theme="dark"] .markdown-body td,
+body[data-theme="dark"] .markdown-body th,
+body[data-theme="dark"] .markdown-body strong,
+body[data-theme="dark"] .markdown-body em,
+body[data-theme="dark"] .markdown-body blockquote {
+  color: #e5e7eb;
+}
+
+body[data-theme="dark"] #preview,
+body[data-theme="dark"] .markdown-body {
+  background: transparent !important;
+}
+
+body[data-theme="dark"] .markdown-body a {
+  color: #7dd3fc;
+}
+
+body[data-theme="dark"] .markdown-body hr,
+body[data-theme="dark"] .markdown-body table tr,
+body[data-theme="dark"] .markdown-body table th,
+body[data-theme="dark"] .markdown-body table td,
+body[data-theme="dark"] .markdown-body blockquote {
+  border-color: #334155;
+}
+
+body[data-theme="dark"] .markdown-body table tr,
+body[data-theme="dark"] .markdown-body table tr:nth-child(2n),
+body[data-theme="dark"] .markdown-body table th,
+body[data-theme="dark"] .markdown-body table td,
+body[data-theme="dark"] .markdown-body blockquote,
+body[data-theme="dark"] .markdown-body details,
+body[data-theme="dark"] .markdown-body pre {
+  background: transparent !important;
+}
+
+body[data-theme="dark"] .markdown-body code {
+  background: #1f2937;
+  color: #f3f4f6;
+}
+
+body[data-theme="dark"] .markdown-body pre,
+body[data-theme="dark"] .markdown-body pre code,
+body[data-theme="dark"] .hljs {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+body[data-theme="dark"] .markdown-body pre {
+  border-color: #334155;
 }
 
 @media (max-width: 960px) {
