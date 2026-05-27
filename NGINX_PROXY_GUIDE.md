@@ -2,7 +2,7 @@
 
 This guide shows how to configure Nginx as a reverse proxy for this project and similar web apps.
 
-Target production domain example: `md.acexy.cn`.
+Target production domain example: `markdown.acexy.cn`.
 
 ## 1. Common Reverse Proxy (HTTP)
 

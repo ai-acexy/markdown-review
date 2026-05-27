@@ -10,7 +10,7 @@ I created this minimal markdown online preview project with GitHub-flavored rend
 
 ## Online
 
-- Live URL: [https://md.acexy.cn](https://md.acexy.cn)
+- Live URL: [https://markdown.acexy.cn](https://markdown.acexy.cn)
 
 ## Features
 

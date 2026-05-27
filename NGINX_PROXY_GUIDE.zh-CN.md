@@ -2,7 +2,7 @@
 
 本指南说明如何为本项目及类似 Web 应用配置 Nginx 反向代理。
 
-当前生产域名示例：`md.acexy.cn`。
+当前生产域名示例：`markdown.acexy.cn`。
 
 ## 1. 常见反向代理（HTTP）
 
