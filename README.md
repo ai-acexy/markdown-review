@@ -21,6 +21,8 @@ I created this minimal markdown online preview project with GitHub-flavored rend
 - I designed CDN-first loading with automatic local fallback
 - I added local storage persistence
 - I provided sample / clear / copy markdown actions
+- I added live character count in the editor title
+- I added Cmd/Ctrl + D to delete current line in editor
 - I added a light/dark theme toggle (default light)
 - I made the layout responsive for desktop and mobile
 
