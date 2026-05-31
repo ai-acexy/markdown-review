@@ -96,7 +96,19 @@ async function loadWithFallback(asset, loader) {
   }
 }
 
+function setBootstrapStatus(text, type) {
+  const badge = document.getElementById("statusBadge");
+  if (!badge) return;
+  badge.textContent = text;
+  badge.classList.remove("is-error", "is-loading", "is-success", "is-warning");
+  if (type) {
+    badge.classList.add(type);
+  }
+}
+
 async function bootstrap() {
+  setBootstrapStatus("加载中", "is-loading");
+
   for (const cssAsset of ASSETS.css) {
     await loadWithFallback(cssAsset, loadStyle);
   }
@@ -105,9 +117,12 @@ async function bootstrap() {
     await loadWithFallback(jsAsset, loadScript);
   }
 
+  setBootstrapStatus("marked GFM", "is-success");
+
   await loadScript("./app.js", ASSET_TIMEOUT_MS);
 }
 
 bootstrap().catch((error) => {
   console.error("Asset bootstrap failed:", error);
+  setBootstrapStatus("加载失败", "is-error");
 });
