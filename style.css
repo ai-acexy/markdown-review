@@ -100,8 +100,9 @@ button:hover {
   min-height: calc(100vh - 64px);
   padding: 12px;
   display: grid;
-  grid-template-columns: var(--split-ratio) 8px calc(100% - var(--split-ratio) - 8px);
+  grid-template-columns: var(--split-ratio) 8px calc(100% - var(--split-ratio) - 32px);
   gap: 12px;
+  overflow: hidden;
 }
 
 html[data-layout-mode="editor"] .layout,
@@ -375,7 +376,7 @@ body[data-theme="dark"] .markdown-body pre {
 
   html[data-layout-mode="split"] .layout,
   .layout[data-layout-mode="split"] {
-    grid-template-rows: var(--split-ratio-mobile) 8px calc(100% - var(--split-ratio-mobile) - 8px);
+    grid-template-rows: var(--split-ratio-mobile) 8px calc(100% - var(--split-ratio-mobile) - 32px);
   }
   .splitter {
     height: 8px;
