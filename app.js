@@ -12,6 +12,8 @@ const inputMeta = document.getElementById("inputMeta");
 const statusBadge = document.getElementById("statusBadge");
 const layout = document.querySelector(".layout");
 const splitterControls = document.getElementById("splitterControls");
+const layoutModeButtons = document.querySelectorAll(".layout-modes button");
+const isMac = /Mac/i.test(navigator.userAgentData?.platform || navigator.platform);
 const themeBtn = document.getElementById("themeBtn");
 const sampleBtn = document.getElementById("sampleBtn");
 const copyBtn = document.getElementById("copyBtn");
@@ -21,6 +23,9 @@ function applyLayoutMode(mode) {
   const nextMode = ["editor", "split", "preview"].includes(mode) ? mode : "split";
   document.documentElement.setAttribute("data-layout-mode", nextMode);
   layout.setAttribute("data-layout-mode", nextMode);
+  layoutModeButtons.forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.dataset.layoutMode === nextMode));
+  });
 }
 
 function clamp(value, min, max) {
@@ -44,7 +49,6 @@ function applySplitRatio(ratio, isMobile) {
 const initialLayoutMode = localStorage.getItem(LAYOUT_MODE_KEY) || "split";
 applyLayoutMode(initialLayoutMode);
 
-const modeCycle = ["editor", "preview", "split"];
 
 const initialDesktopRatio = Number(localStorage.getItem(SPLIT_RATIO_KEY)) || 0.5;
 const initialMobileRatio = Number(localStorage.getItem(SPLIT_RATIO_MOBILE_KEY)) || 0.5;
@@ -52,7 +56,6 @@ applySplitRatio(initialDesktopRatio, false);
 applySplitRatio(initialMobileRatio, true);
 
 let dragState = null;
-let ignoreClickAfterDrag = false;
 
 splitterControls.addEventListener("pointerdown", (event) => {
   const mobile = isMobileViewport();
@@ -114,7 +117,6 @@ function stopDrag(pointerId) {
   if (!dragState) {
     return;
   }
-  ignoreClickAfterDrag = dragState.moved;
   dragState = null;
   if (pointerId !== undefined) {
     splitterControls.releasePointerCapture(pointerId);
@@ -129,16 +131,26 @@ splitterControls.addEventListener("pointercancel", () => {
   stopDrag();
 });
 
-splitterControls.addEventListener("click", () => {
-  if (ignoreClickAfterDrag) {
-    ignoreClickAfterDrag = false;
-    return;
-  }
-  const current = layout.getAttribute("data-layout-mode") || "split";
-  const currentIndex = modeCycle.indexOf(current);
-  const nextMode = modeCycle[(currentIndex + 1) % modeCycle.length];
-  localStorage.setItem(LAYOUT_MODE_KEY, nextMode);
-  applyLayoutMode(nextMode);
+function selectLayoutMode(mode) {
+  localStorage.setItem(LAYOUT_MODE_KEY, mode);
+  applyLayoutMode(mode);
+}
+
+layoutModeButtons.forEach((button, index) => {
+  const key = index + 1;
+  button.removeAttribute("title");
+  button.dataset.shortcut = `${isMac ? "⌘" : "Alt"} + ${key}`;
+  button.setAttribute("aria-keyshortcuts", `${isMac ? "Meta" : "Alt"}+${key}`);
+  button.addEventListener("click", () => selectLayoutMode(button.dataset.layoutMode));
+});
+
+document.addEventListener("keydown", (event) => {
+  const modifierPressed = isMac ? event.metaKey && !event.altKey : event.altKey && !event.metaKey;
+  if (!modifierPressed || event.ctrlKey || event.shiftKey || event.isComposing || event.repeat) return;
+  const mode = { Digit1: "editor", Digit2: "split", Digit3: "preview" }[event.code];
+  if (!mode) return;
+  event.preventDefault();
+  selectLayoutMode(mode);
 });
 
 function applyTheme(theme) {
